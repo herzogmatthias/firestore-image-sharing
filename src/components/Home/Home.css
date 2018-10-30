@@ -1,0 +1,10 @@
+.menuButton {
+    margin-left: -12px !important;
+    margin-right: 20px !important;
+}
+.root {
+    flex-grow: 1 !important;
+}
+.grow {
+    flex-grow: 1 !important;
+}
