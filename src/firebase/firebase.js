@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import 'firebase/storage'
+import 'firebase/storage';
+import 'firebase/firestore';
 
 const config = {
     apiKey: "AIzaSyA9oGOi_p2_fdIsxGZHCCI71PICZLujdpI",
@@ -20,6 +21,10 @@ const storageRef = firebase
     .storage()
     .ref();
 const storage = firebase.storage;
+const db = firebase.firestore();
+db.settings({
+    timestampsInSnapshots: true
+})
 
 export function uploadImg(img) {
     var uploadTask = storageRef
@@ -38,4 +43,4 @@ export const uiConfig = {
     signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID]
 };
 
-export {auth, storage, storageRef};
+export {auth, storage, storageRef, db, firebase};

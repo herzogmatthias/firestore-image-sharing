@@ -7,12 +7,16 @@ import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import {uploadImg, storage} from '../../firebase/firebase';
+import {db} from '../../firebase/index.js';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import  Grid  from '@material-ui/core/Grid';
 
 class ImageDialog extends React.Component {
     constructor() {
         super();
         this.state = {
+            title: "",
+            user: JSON.parse(localStorage.getItem('user')),
             src: {
                 lastModified: 0,
                 lastModifiedDate: new Date(),
@@ -47,8 +51,16 @@ class ImageDialog extends React.Component {
                 .snapshot
                 .ref
                 .getDownloadURL()
-                .then(function (downloadURL) {
+                .then((downloadURL) => {
+
                     console.log('File available at', downloadURL);
+                    const post = {
+                        title: this.state.title,
+                        user: this.state.user,
+                        imgURL: downloadURL
+                    }
+                    const postRef = db.addDb(post);
+                    console.log(postRef);
                 });
         })
     }
@@ -65,7 +77,10 @@ class ImageDialog extends React.Component {
                 {...other}>
                 <DialogTitle id="simple-dialog-title">Add your Image</DialogTitle>
                 <DialogContent>
-                    <input
+                <Grid className="divider" container alignItems="center" direction="column">
+                <TextField onChange={(e) => this.setState({title: e.target.value})} color="primary" value={this.state.title} label="title of your image"/>
+                </Grid>
+                <input
                         accept="image/*"
                         style={{
                         display: 'none'
@@ -81,6 +96,7 @@ class ImageDialog extends React.Component {
                     <TextField color="primary" value={this.state.src.name}/>
                     <div className="divider"></div>
                     <LinearProgress variant="determinate" value={this.state.progress}/>
+                
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.handleClose} color="primary">
