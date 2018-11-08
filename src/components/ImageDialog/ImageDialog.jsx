@@ -9,7 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import {uploadImg, storage} from '../../firebase/firebase';
 import {db} from '../../firebase/index.js';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import  Grid  from '@material-ui/core/Grid';
+import Grid from '@material-ui/core/Grid';
 
 class ImageDialog extends React.Component {
     constructor() {
@@ -25,6 +25,7 @@ class ImageDialog extends React.Component {
                 type: '',
                 webkitRelativePath: ""
             },
+            desc: '',
             progress: 0,
             isUploading: true
         };
@@ -37,6 +38,24 @@ class ImageDialog extends React.Component {
     handleChange = (e) => {
         console.log(e.target.files)
         this.setState({src: e.target.files[0]});
+    }
+    handleMultiLine = (e) => {
+        this.setState({desc: e.target.value})
+    }
+    filterTags = () => {
+        let descArray = this
+            .state
+            .desc
+            .split('#');
+        console.log(descArray);
+        descArray.splice(0, 1);
+        let tags = [];
+        for (const tag of descArray) {
+            if (tag !== "") {
+                tags.push(tag);
+            }
+        }
+        return tags;
     }
     startUpload = () => {
         var uploadTask = uploadImg(this.state.src);
@@ -52,14 +71,16 @@ class ImageDialog extends React.Component {
                 .ref
                 .getDownloadURL()
                 .then((downloadURL) => {
-
+                    const tags = this.filterTags();
                     console.log('File available at', downloadURL);
                     const post = {
                         title: this.state.title,
                         user: this.state.user,
-                        imgURL: downloadURL
+                        imgURL: downloadURL,
+                        description: this.state.desc,
+                        tags: tags
                     }
-                    const postRef = db.addDb(post);
+                    const postRef = db.addPost(post);
                     console.log(postRef);
                 });
         })
@@ -77,10 +98,15 @@ class ImageDialog extends React.Component {
                 {...other}>
                 <DialogTitle id="simple-dialog-title">Add your Image</DialogTitle>
                 <DialogContent>
-                <Grid className="divider" container alignItems="center" direction="column">
-                <TextField onChange={(e) => this.setState({title: e.target.value})} color="primary" value={this.state.title} label="title of your image"/>
-                </Grid>
-                <input
+                    <Grid className="divider" container alignItems="center" direction="column">
+                        <TextField
+                            onChange={(e) => this.setState({title: e.target.value})}
+                            color="primary"
+                            value={this.state.title}
+                            margin="normal"
+                            label="Title of your image"/>
+                    </Grid>
+                    <input
                         accept="image/*"
                         style={{
                         display: 'none'
@@ -93,14 +119,30 @@ class ImageDialog extends React.Component {
                             Upload
                         </Button>
                     </label>
-                    <TextField color="primary" value={this.state.src.name}/>
+                    <TextField
+                        color="primary"
+                        InputProps={{
+                        readOnly: true
+                    }}
+                        value={this.state.src.name}/>
                     <div className="divider"></div>
                     <LinearProgress variant="determinate" value={this.state.progress}/>
-                
+                    <Grid container alignItems="center" direction="column">
+                        <TextField
+                            id="standard-multiline-flexible"
+                            label="Description (# for tag)"
+                            multiline
+                            rowsMax="5"
+                            fullWidth
+                            value={this.state.desc}
+                            onChange={this.handleMultiLine}
+                            margin="normal"/>
+                    </Grid>
+
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.handleClose} color="primary">
-                        Disagree
+                        Cancel
                     </Button>
                     <Button onClick={this.startUpload} color="primary" autoFocus>
                         Upload
