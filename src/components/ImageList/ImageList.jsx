@@ -28,7 +28,11 @@ class ImageList extends React.Component {
       .tags
       .map((val, id) => {
         return (
-          <Typography key={id} color="primary" component="p">
+          <Typography
+            key={id}
+            onClick={() => this.changeFilter(val)}
+            color="primary"
+            component="p">
             #{val}
           </Typography>
         )
@@ -39,6 +43,11 @@ class ImageList extends React.Component {
     this
       .props
       .onDelete(this.props.post);
+  }
+  changeFilter = (val) => {
+    this
+      .props
+      .changeFilter(val)
   }
 
   render() {
@@ -79,6 +88,7 @@ class ImageList extends React.Component {
                     .post
                     .description
                     .split('#')[0]}
+
                 </Typography>
                 {this.getTags()}
               </span>

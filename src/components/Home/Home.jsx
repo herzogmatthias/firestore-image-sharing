@@ -24,7 +24,12 @@ class Home extends React.Component {
             open: false,
             posts: [],
             isLoading: true,
-            tags: []
+            tags: [
+                {
+                    label: 'select All'
+                }
+            ],
+            selectedTag: ""
         };
         this.singOut = this
             .singOut
@@ -87,6 +92,9 @@ class Home extends React.Component {
     handleClickOpen = () => {
         this.setState({open: true});
     };
+    changeFilter = (newTag) => {
+        this.setState({selectedTag: newTag})
+    }
 
     handleClose = () => {
         this.setState({open: false});
@@ -109,7 +117,9 @@ class Home extends React.Component {
         imgRef.delete();
 
     }
-    handleSearch = () => {}
+    handleSearch = (e) => {
+        this.setState({selectedTag: e.label})
+    }
     singOut(e) {
         console.log(this.props)
         auth
@@ -146,8 +156,10 @@ class Home extends React.Component {
                 <Select
                     options={this.state.tags}
                     isSearchable
-                    onChange={this.handleSearch}
-                    placeholder="Search a country (start with a)"/> {this.state.isLoading
+                    Input
+                    value={this.state.selectedTag}
+                    onChange={(e) => this.handleSearch(e)}
+                    placeholder="Search after Tags"/> {this.state.isLoading
                     ? (
                         <div
                             style={{
@@ -158,12 +170,19 @@ class Home extends React.Component {
                         </div>
                     )
                     : (this.state.posts.map((val, ind, arr) => {
-                        return (
-                            <Grid key={ind} container justify="center">
-                                <ImageList onDelete={this.handleDelete} post={val} key={ind}></ImageList>
-                            </Grid>
+                        console.log(val.tags);
+                        if (val.tags.includes(this.state.selectedTag) || this.state.selectedTag === "" || this.state.selectedTag === 'select All') 
+                            return (
+                                <Grid key={ind} container justify="center">
+                                    <ImageList
+                                        onDelete={this.handleDelete}
+                                        changeFilter={this.changeFilter}
+                                        post={val}
+                                        key={ind}></ImageList>
+                                </Grid>
 
-                        )
+                            )
+
                     }))}
                 <ImageDialog open={this.state.open} onClose={this.handleClose}></ImageDialog>
             </div>
