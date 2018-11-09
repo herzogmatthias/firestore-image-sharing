@@ -21,6 +21,20 @@ class ImageList extends React.Component {
   componentWillMount() {
     console.log(this.props)
   }
+  getTags = () => {
+    return this
+      .props
+      .post
+      .tags
+      .map((val, id) => {
+        return (
+          <Typography key={id} color="primary" component="p">
+            #{val}
+          </Typography>
+        )
+
+      })
+  }
   onDelete = () => {
     this
       .props
@@ -56,9 +70,19 @@ class ImageList extends React.Component {
               <Typography gutterBottom variant="h5" component="h2">
                 {this.props.post.title}
               </Typography>
-              <Typography component="p">
-                {this.props.post.description}
-              </Typography>
+              <span style={{
+                display: 'inline-flex'
+              }}>
+                <Typography component="p">
+                  {this
+                    .props
+                    .post
+                    .description
+                    .split('#')[0]}
+                </Typography>
+                {this.getTags()}
+              </span>
+
             </CardContent>
           </CardActionArea>
           <CardActions></CardActions>
