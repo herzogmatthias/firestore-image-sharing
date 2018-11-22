@@ -26,7 +26,7 @@ export async function updateLikesForPic(like, user) {
                 "users": firestore
                     .FieldValue
                     .arrayUnion(user),
-                "likeCount": like.likeCount + 1
+                "likeCount": like.likeCount + 1,
             })
         console.log(updateRef);
     });

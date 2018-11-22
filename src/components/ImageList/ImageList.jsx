@@ -27,7 +27,8 @@ class ImageList extends React.Component {
     };
   }
   handleUpdate = () => {
-
+    console.log("I tried")
+    console.log(this.state.hasLiked);
     if (!this.state.hasLiked) {
       console.log(this.state.like);
       updateLikesForPic(this.state.like, this.state.user);
@@ -36,7 +37,7 @@ class ImageList extends React.Component {
   hasAlreadyLiked = (data) => {
     console.log(data);
     data.users.forEach(value => {
-      if(value.uuid === this.state.user.uuid) {
+      if(value.uid === this.state.user.uid) {
         this.setState({hasLiked: true});
       }
     })
@@ -51,9 +52,7 @@ class ImageList extends React.Component {
         snapshot
           .docChanges()
           .forEach(change => {
-            if(!this.state.hasLiked){
               this.hasAlreadyLiked(change.doc.data());
-            }
             if (change.type === "added") {
               this.setState({
                 like: change
@@ -63,6 +62,7 @@ class ImageList extends React.Component {
             }
             if (change.type === "modified") {
               console.log("hello bois");
+              console.log(change.doc.data());
               this.setState({
                 like: change
                   .doc
