@@ -81,6 +81,13 @@ class ImageDialog extends React.Component {
                         tags: tags
                     }
                     const postRef = db.addPost(post);
+                    const like = {
+                        users : [],
+                        imgURL: downloadURL,
+                        likeCount: 0,
+                    }
+                    const likeRef = db.addLikesForPic(like);
+                    console.log(likeRef);
                     console.log(postRef);
                 });
         })

@@ -12,6 +12,8 @@ import Avatar from '@material-ui/core/Avatar';
 import ImageDialog from '../ImageDialog/ImageDialog';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {db, firebase} from '../../firebase/firebase';
+import {getPostForImgURL} from '../../firebase/firestore.js';
+import {deleteLikesForPic} from '../../firebase/firestore.js';
 import ImageList from '../ImageList/ImageList';
 import Grid from '@material-ui/core/Grid';
 import Select from 'react-select'
@@ -44,7 +46,6 @@ class Home extends React.Component {
         return null;
     }
     componentWillMount() {
-
         db
             .collection('posts')
             .onSnapshot((snapshot) => {
@@ -99,16 +100,20 @@ class Home extends React.Component {
     handleClose = () => {
         this.setState({open: false});
     };
-    handleDelete = (post) => {
-        const postToDelete = db
-            .collection('posts')
-            .where('imgURL', '==', post.imgURL);
+    handleDelete = async post => {
+        const postToDelete = await getPostForImgURL(post.imgURL);
+        const likesToDelete = await deleteLikesForPic(post.imgURL);
         console.log(postToDelete);
 
         const imgRef = firebase
             .storage()
             .refFromURL(post.imgURL);
         postToDelete
+            .get()
+            .then(querySnapshot => {
+                querySnapshot.forEach((doc) => doc.ref.delete());
+            });
+        likesToDelete
             .get()
             .then(querySnapshot => {
                 querySnapshot.forEach((doc) => doc.ref.delete());

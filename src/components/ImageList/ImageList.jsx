@@ -9,17 +9,36 @@ import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import PlusOneIcon from '@material-ui/icons/PlusOne';
+import {db} from '../../firebase';
 
 class ImageList extends React.Component {
   constructor() {
     super();
     this.state = {
-      user: JSON.parse(localStorage.getItem('user'))
+      user: JSON.parse(localStorage.getItem('user')),
+      likes: {
+        users: [],
+        imgURL: "",
+        likeCount: 0
+      }
     };
   }
 
-  componentWillMount() {
+  async componentWillMount() {
     console.log(this.props)
+    const likes = await db.getLikesForImage(this.props.post);
+    likes
+      .get()
+      .then(val => {
+        val
+          .docs
+          .forEach(val => {
+            this.setState({
+              likes: val.data()
+            })
+          })
+      });
   }
   getTags = () => {
     return this
@@ -95,7 +114,11 @@ class ImageList extends React.Component {
 
             </CardContent>
           </CardActionArea>
-          <CardActions></CardActions>
+          <CardActions>
+            <IconButton onClick={this.onDelete}>
+              <PlusOneIcon></PlusOneIcon>
+            </IconButton>
+          </CardActions>
         </Card>
       </div>
 
