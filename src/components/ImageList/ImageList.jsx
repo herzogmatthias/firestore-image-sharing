@@ -10,35 +10,68 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PlusOneIcon from '@material-ui/icons/PlusOne';
-import {db} from '../../firebase';
+import {updateLikesForPic} from '../../firebase/firestore.js';
+import {db} from '../../firebase/firebase';
 
 class ImageList extends React.Component {
   constructor() {
     super();
     this.state = {
       user: JSON.parse(localStorage.getItem('user')),
-      likes: {
+      like: {
         users: [],
         imgURL: "",
         likeCount: 0
-      }
+      },
+      hasLiked: false
     };
   }
+  handleUpdate = () => {
 
+    if (!this.state.hasLiked) {
+      console.log(this.state.like);
+      updateLikesForPic(this.state.like, this.state.user);
+    }
+  }
+  hasAlreadyLiked = (data) => {
+    console.log(data);
+    data.users.forEach(value => {
+      if(value.uuid === this.state.user.uuid) {
+        this.setState({hasLiked: true});
+      }
+    })
+  }
   async componentWillMount() {
     console.log(this.props)
-    const likes = await db.getLikesForImage(this.props.post);
-    likes
-      .get()
-      .then(val => {
-        val
-          .docs
-          .forEach(val => {
-            this.setState({
-              likes: val.data()
-            })
+    db
+      .collection('likesForPic')
+      .where('imgURL', '==', this.props.post.imgURL)
+      .onSnapshot(snapshot => {
+        console.log("hello bois");
+        snapshot
+          .docChanges()
+          .forEach(change => {
+            if(!this.state.hasLiked){
+              this.hasAlreadyLiked(change.doc.data());
+            }
+            if (change.type === "added") {
+              this.setState({
+                like: change
+                  .doc
+                  .data()
+              })
+            }
+            if (change.type === "modified") {
+              console.log("hello bois");
+              this.setState({
+                like: change
+                  .doc
+                  .data()
+              });
+            }
           })
-      });
+      }, error => console.log(error));
+    console.log(this.state.like)
   }
   getTags = () => {
     return this
@@ -115,9 +148,13 @@ class ImageList extends React.Component {
             </CardContent>
           </CardActionArea>
           <CardActions>
-            <IconButton onClick={this.onDelete}>
-              <PlusOneIcon></PlusOneIcon>
+            <IconButton onClick={this.handleUpdate}>
+              <PlusOneIcon color="primary"></PlusOneIcon>
             </IconButton>
+            <Typography component="p">
+              <b>{this.state.like.likeCount} </b>
+              have already liked the picture
+            </Typography>
           </CardActions>
         </Card>
       </div>

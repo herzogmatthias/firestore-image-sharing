@@ -1,4 +1,5 @@
 import {db} from './firebase';
+import {firestore} from 'firebase';
 
 export async function addPost(post) {
     const postRef = db
@@ -7,16 +8,33 @@ export async function addPost(post) {
     return postRef
 }
 export async function addLikesForPic(like) {
-    const likeRef = db
+     db
         .collection('likesForPic')
         .add(like);
 
 }
-export async function updateLikesForPic(like) {}
+export async function updateLikesForPic(like, user) {
+    const likeRef = await db
+        .collection("likesForPic")
+        .where("imgURL", "==", like.imgURL)
+        .get();
+    likeRef.forEach(async doc => {
+        console.log(doc);
+        const updateRef = await doc
+            .ref
+            .update({
+                "users": firestore
+                    .FieldValue
+                    .arrayUnion(user),
+                "likeCount": like.likeCount + 1
+            })
+        console.log(updateRef);
+    });
+}
 export async function getLikesForImage(post) {
     const likeRef = await db
         .collection('likesForPic')
-        .where('imgURL', '==', post.imgUrl);
+        .where('imgURL', '==', post.imgURL);
     console.log(likeRef);
     return likeRef;
 }

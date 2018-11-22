@@ -31,7 +31,7 @@ class Home extends React.Component {
                     label: 'select All'
                 }
             ],
-            selectedTag: ""
+            selectedTag: {label: ""}
         };
         this.singOut = this
             .singOut
@@ -94,7 +94,7 @@ class Home extends React.Component {
         this.setState({open: true});
     };
     changeFilter = (newTag) => {
-        this.setState({selectedTag: newTag})
+        this.setState({selectedTag: {label: newTag}})
     }
 
     handleClose = () => {
@@ -123,7 +123,8 @@ class Home extends React.Component {
 
     }
     handleSearch = (e) => {
-        this.setState({selectedTag: e.label})
+        console.log(e);
+        this.setState({selectedTag: {label: e.label}})
     }
     singOut(e) {
         console.log(this.props)
@@ -176,7 +177,7 @@ class Home extends React.Component {
                     )
                     : (this.state.posts.map((val, ind, arr) => {
                         console.log(val.tags);
-                        if (val.tags.includes(this.state.selectedTag) || this.state.selectedTag === "" || this.state.selectedTag === 'select All') 
+                        if (val.tags.includes(this.state.selectedTag.label) || this.state.selectedTag.label === "" || this.state.selectedTag.label === 'select All') 
                             return (
                                 <Grid key={ind} container justify="center">
                                     <ImageList
@@ -193,10 +194,6 @@ class Home extends React.Component {
             </div>
         )
 
-    }
-
-    componentDidMount() {
-        this.setState({someKey: 'otherValue'});
     }
 }
 
