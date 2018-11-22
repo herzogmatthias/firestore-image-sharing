@@ -39,9 +39,10 @@ class Login extends React.Component {
           </CardActionArea>
           <CardActions>
             <StyledFirebaseAuth
+            uiCallback={ui => ui.disableAutoSignIn()}
               className="logInBtn"
               uiConfig={firebase.uiConfig}
-              firebaseAuth={firebase.auth}/>
+              firebaseAuth={firebase.firebase.auth()}/>
           </CardActions>
         </Card>
       </div>
