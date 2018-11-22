@@ -31,12 +31,33 @@ class Home extends React.Component {
                     label: 'select All'
                 }
             ],
-            selectedTag: {label: ""}
+            selectedTag: {label: ""},
+            customStyles : {
+                menu: base => ({
+                  ...base,
+                  // override border radius to match the box
+                  borderRadius: 0,
+                  // kill the gap
+                  marginTop: 0,
+                }),
+                menuList: base => ({
+                  ...base,
+                  // kill the white space on first and last option
+                  padding: 0,
+                }),
+                option: (base, state) => ({
+                    ...base,
+                    backgroundColor: "white",
+                    color : "black",
+                })
+
+              }
         };
         this.singOut = this
             .singOut
             .bind(this);
     }
+    
     search = (nameKey, myArray) => {
         for (var i = 0; i < myArray.length; i++) {
             if (myArray[i].label === nameKey) {
@@ -162,6 +183,7 @@ class Home extends React.Component {
                 <Select
                     options={this.state.tags}
                     isSearchable
+                    styles={this.state.customStyles}
                     Input
                     value={this.state.selectedTag}
                     onChange={(e) => this.handleSearch(e)}

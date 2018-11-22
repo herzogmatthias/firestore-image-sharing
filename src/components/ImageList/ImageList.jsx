@@ -126,7 +126,13 @@ class ImageList extends React.Component {
               </Grid>
 
             </CardContent>
+            <div className="image-content">
+            <div className="flex-space"></div>
             <img src={this.props.post.imgURL} alt="" className="media"></img>
+            <div className="flex-space"></div>
+            </div>
+            
+            
             <CardContent>
               <Typography gutterBottom variant="h5" component="h2">
                 {this.props.post.title}
