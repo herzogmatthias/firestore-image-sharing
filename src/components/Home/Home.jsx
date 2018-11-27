@@ -1,28 +1,19 @@
 import React from 'react';
 import './Home.css';
-import Button from '@material-ui/core/Button';
-import {auth} from '../../firebase/index.js'
-import {withRouter} from 'react-router';
-import Typography from '@material-ui/core/Typography';
-import MenuIcon from '@material-ui/icons/Menu';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Avatar from '@material-ui/core/Avatar';
 import ImageDialog from '../ImageDialog/ImageDialog';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {db, firebase} from '../../firebase/firebase';
-import {getPostForImgURL} from '../../firebase/firestore.js';
+import {getPostForId} from '../../firebase/firestore.js';
 import {deleteLikesForPic} from '../../firebase/firestore.js';
 import ImageList from '../ImageList/ImageList';
 import Grid from '@material-ui/core/Grid';
 import Select from 'react-select'
+import Navbar from '../NavbarComponent/Navbar';
 
 class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: JSON.parse(localStorage.getItem('user')),
             open: false,
             posts: [],
             isLoading: true,
@@ -31,33 +22,32 @@ class Home extends React.Component {
                     label: 'select All'
                 }
             ],
-            selectedTag: {label: ""},
-            customStyles : {
+            selectedTag: {
+                label: ""
+            },
+            customStyles: {
                 menu: base => ({
-                  ...base,
-                  // override border radius to match the box
-                  borderRadius: 0,
-                  // kill the gap
-                  marginTop: 0,
+                    ...base,
+                    // override border radius to match the box
+                    borderRadius: 0,
+                    // kill the gap
+                    marginTop: 0
                 }),
                 menuList: base => ({
-                  ...base,
-                  // kill the white space on first and last option
-                  padding: 0,
+                    ...base,
+                    // kill the white space on first and last option
+                    padding: 0
                 }),
                 option: (base, state) => ({
                     ...base,
                     backgroundColor: "white",
-                    color : "black",
+                    color: "black"
                 })
 
-              }
+            }
         };
-        this.singOut = this
-            .singOut
-            .bind(this);
     }
-    
+
     search = (nameKey, myArray) => {
         for (var i = 0; i < myArray.length; i++) {
             if (myArray[i].label === nameKey) {
@@ -74,12 +64,33 @@ class Home extends React.Component {
                     .docChanges()
                     .forEach((change) => {
                         if (change.type === 'added') {
+                            const post = {
+                                id: change.doc.id,
+                                tags: change
+                                    .doc
+                                    .data()
+                                    .tags,
+                                imgURL: change
+                                    .doc
+                                    .data()
+                                    .imgURL,
+                                title: change
+                                    .doc
+                                    .data()
+                                    .title,
+                                user: change
+                                    .doc
+                                    .data()
+                                    .user,
+                                description: change
+                                    .doc
+                                    .data()
+                                    .description
+                            }
                             this.setState(prevState => ({
                                 posts: [
                                     ...prevState.posts,
-                                    change
-                                        .doc
-                                        .data()
+                                    post
                                 ]
                             }))
                             change
@@ -99,7 +110,7 @@ class Home extends React.Component {
                         }
                         if (change.type === 'removed') {
                             var arr = [...this.state.posts];
-                            let postToDelete = arr.findIndex((val) => val.imgURL === change.doc.data().imgURL);
+                            let postToDelete = arr.findIndex((val) => val.id === change.doc.id);
                             console.log(postToDelete);
                             arr.splice(postToDelete, 1);
                             console.log(arr);
@@ -115,14 +126,18 @@ class Home extends React.Component {
         this.setState({open: true});
     };
     changeFilter = (newTag) => {
-        this.setState({selectedTag: {label: newTag}})
+        this.setState({
+            selectedTag: {
+                label: newTag
+            }
+        })
     }
 
     handleClose = () => {
         this.setState({open: false});
     };
     handleDelete = async post => {
-        const postToDelete = await getPostForImgURL(post.imgURL);
+        const postToDelete = await getPostForId(post.id);
         const likesToDelete = await deleteLikesForPic(post.imgURL);
         console.log(postToDelete);
 
@@ -145,41 +160,16 @@ class Home extends React.Component {
     }
     handleSearch = (e) => {
         console.log(e);
-        this.setState({selectedTag: {label: e.label}})
-    }
-    singOut(e) {
-        console.log(this.props)
-        auth
-            .auth
-            .signOut()
-            .then(() => {
-                localStorage.removeItem("user")
-                this
-                    .props
-                    .history
-                    .push('/');
-            })
-            .catch(error => console.log(error))
+        this.setState({
+            selectedTag: {
+                label: e.label
+            }
+        })
     }
     render() {
         return (
             <div className="root">
-
-                <AppBar position="static">
-                    <Toolbar>
-                        <IconButton className="menuButton" color="inherit" aria-label="Menu">
-                            <MenuIcon/>
-                        </IconButton>
-                        <Typography className="grow" variant="h6" color="inherit">
-                            Image-Sharing
-                        </Typography>
-                        <Button onClick={this.singOut} color="inherit">Logout</Button>
-                        <Button onClick={this.handleClickOpen} color="inherit">
-                            Add Picture
-                        </Button>
-                        <Avatar alt="" src={this.state.user.photoURL}/>
-                    </Toolbar>
-                </AppBar>
+                <Navbar handleClickOpen={this.handleClickOpen}></Navbar>
                 <Select
                     options={this.state.tags}
                     isSearchable
@@ -219,4 +209,4 @@ class Home extends React.Component {
     }
 }
 
-export default withRouter(Home);
+export default Home;

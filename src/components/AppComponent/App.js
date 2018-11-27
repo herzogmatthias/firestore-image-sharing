@@ -6,6 +6,7 @@ import {BrowserRouter, Route, Redirect} from 'react-router-dom'
 import Home from '../Home/Home';
 import {auth} from '../../firebase/index';
 import {CircularProgress} from '@material-ui/core';
+import ImageDetails from './../DetailsComponent/ImageDetails';
 const theme = createMuiTheme({
   palette: {
     type: 'light'
@@ -63,6 +64,11 @@ class App extends Component {
               exact
               path="/home"
               component={Home}/>
+            <AuthenticatedRoute
+              authenticated={this.state.authenticated}
+              exact
+              path="/details"
+              component={ImageDetails}/>
           </div>
         </BrowserRouter>
       </MuiThemeProvider>

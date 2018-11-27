@@ -8,7 +8,7 @@ export async function addPost(post) {
     return postRef
 }
 export async function addLikesForPic(like) {
-     db
+    db
         .collection('likesForPic')
         .add(like);
 
@@ -26,7 +26,7 @@ export async function updateLikesForPic(like, user) {
                 "users": firestore
                     .FieldValue
                     .arrayUnion(user),
-                "likeCount": like.likeCount + 1,
+                "likeCount": like.likeCount + 1
             })
         console.log(updateRef);
     });
@@ -35,13 +35,14 @@ export async function getLikesForImage(post) {
     const likeRef = await db
         .collection('likesForPic')
         .where('imgURL', '==', post.imgURL);
-    console.log(likeRef);
+    console.log();
     return likeRef;
 }
-export async function getPostForImgURL(imgUrl) {
+export async function getPostForId(id) {
+    console.log(id);
     const imgRef = await db
         .collection('posts')
-        .where('imgURL', '==', imgUrl);
+        .doc(id);
     console.log(imgRef);
     return imgRef;
 }

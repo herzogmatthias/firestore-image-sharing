@@ -9,9 +9,11 @@ import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import ChatBoubleRoundedIcon from '@material-ui/icons/ChatBubbleRounded';
 import PlusOneIcon from '@material-ui/icons/PlusOne';
 import {updateLikesForPic} from '../../firebase/firestore.js';
 import {db} from '../../firebase/firebase';
+import {withRouter} from 'react-router-dom'
 
 class ImageList extends React.Component {
   constructor() {
@@ -36,11 +38,22 @@ class ImageList extends React.Component {
   }
   hasAlreadyLiked = (data) => {
     console.log(data);
-    data.users.forEach(value => {
-      if(value.uid === this.state.user.uid) {
-        this.setState({hasLiked: true});
-      }
-    })
+    data
+      .users
+      .forEach(value => {
+        if (value.uid === this.state.user.uid) {
+          this.setState({hasLiked: true});
+        }
+      })
+  }
+  navigateToDetails = (e) => {
+    this
+      .props
+      .history
+      .push({
+        pathname: '/details',
+        search: '?id=' + this.props.post.id
+      });
   }
   async componentWillMount() {
     console.log(this.props)
@@ -52,7 +65,7 @@ class ImageList extends React.Component {
         snapshot
           .docChanges()
           .forEach(change => {
-              this.hasAlreadyLiked(change.doc.data());
+            this.hasAlreadyLiked(change.doc.data());
             if (change.type === "added") {
               this.setState({
                 like: change
@@ -127,12 +140,11 @@ class ImageList extends React.Component {
 
             </CardContent>
             <div className="image-content">
-            <div className="flex-space"></div>
-            <img src={this.props.post.imgURL} alt="" className="media"></img>
-            <div className="flex-space"></div>
+              <div className="flex-space"></div>
+              <img src={this.props.post.imgURL} alt="" className="media"></img>
+              <div className="flex-space"></div>
             </div>
-            
-            
+
             <CardContent>
               <Typography gutterBottom variant="h5" component="h2">
                 {this.props.post.title}
@@ -154,13 +166,24 @@ class ImageList extends React.Component {
             </CardContent>
           </CardActionArea>
           <CardActions>
-            <IconButton onClick={this.handleUpdate}>
-              <PlusOneIcon color="primary"></PlusOneIcon>
-            </IconButton>
-            <Typography component="p">
-              <b>{this.state.like.likeCount} </b>
-              have already liked the picture
-            </Typography>
+            <Grid container justify="space-between">
+              <div>
+                <IconButton onClick={this.handleUpdate}>
+                  <PlusOneIcon color="primary"></PlusOneIcon>
+                </IconButton>
+                <Typography component="p">
+                  <b>{this.state.like.likeCount}
+                  </b>
+                  have already liked the picture
+                </Typography>
+              </div>
+              <div>
+                <IconButton onClick={this.navigateToDetails}>
+                  <ChatBoubleRoundedIcon color="primary"></ChatBoubleRoundedIcon>
+                </IconButton>
+              </div>
+            </Grid>
+
           </CardActions>
         </Card>
       </div>
@@ -170,4 +193,4 @@ class ImageList extends React.Component {
 
 }
 
-export default ImageList;
+export default withRouter(ImageList);
