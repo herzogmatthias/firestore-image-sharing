@@ -9,9 +9,11 @@ This is a Serverless App for sharing images between people.
 ## Features
 - Login with your Google Account
 - Upload your own Images
+- Delete your own Images
 - Like Images from other people
 - include tags with Images e.g. #Hello
 - Filter Images by Tags
+- Write Comments under Images
 
 ## Website
 https://firestore-image-sharing.firebaseapp.com
