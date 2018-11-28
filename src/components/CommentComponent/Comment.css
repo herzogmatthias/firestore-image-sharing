@@ -1,0 +1,6 @@
+.inline {
+  display: "inline";
+}
+.item {
+    align-items: flex-start;
+}

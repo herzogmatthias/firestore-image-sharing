@@ -52,3 +52,9 @@ export async function deleteLikesForPic(imgUrl) {
         .where('imgURL', '==', imgUrl);
     return likeRef;
 }
+export async function addCommentsForPicture(comment) {
+    console.log(comment);
+    db
+        .collection('commentsForPicture')
+        .add(comment);
+}

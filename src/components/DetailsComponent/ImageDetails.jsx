@@ -1,7 +1,7 @@
 import React from 'react';
 import './ImageDetails.css'
 import Navbar from '../NavbarComponent/Navbar';
-import {getPostForId, getLikesForImage} from '../../firebase/firestore.js';
+import {getPostForId, getLikesForImage, addCommentsForPicture} from '../../firebase/firestore.js';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
@@ -11,13 +11,16 @@ import Divider from '@material-ui/core/Divider';
 import TextField from '@material-ui/core/TextField';
 import PublishIcon from '@material-ui/icons/Publish';
 import IconButton from '@material-ui/core/IconButton';
+import {db} from '../../firebase/firebase';
+import Comment from '../CommentComponent/Comment';
+import List from '@material-ui/core/List';
 const queryString = require('query-string');
 
 class ImageDetails extends React.Component {
     constructor() {
         super();
         this.state = {
-            someKey: 'someValue',
+            user: JSON.parse(localStorage.getItem('user')),
             post: {},
             loading: true,
             likes: {},
@@ -38,6 +41,17 @@ class ImageDetails extends React.Component {
         this.setState({myComment: myComment});
         console.log(this.state);
     }
+    addComment = () => {
+        let myComment = {
+            ...this.state.myComment
+        }
+        myComment.date = new Date();
+        myComment.user = this.state.user;
+        console.log(this.state.user)
+        console.log(myComment);
+        this.setState({myComment: myComment});
+        addCommentsForPicture(myComment);
+    }
     getTags = () => {
         return this
             .state
@@ -55,7 +69,12 @@ class ImageDetails extends React.Component {
     async componentWillMount() {
         const id = queryString.parse(this.props.location.search)
         console.log(id);
-
+        
+        let myComment = {
+            ...this.state.myComment
+        };
+        myComment.postId = id.id;
+        this.setState({myComment: myComment});
         let post = await getPostForId(id.id);
         await post
             .get()
@@ -81,20 +100,45 @@ class ImageDetails extends React.Component {
                 this.setState({post: post});
             })
         let likes = await getLikesForImage(this.state.post);
-        likes
+        await likes
             .get()
             .then(snapshot => {
                 snapshot
                     .docs
                     .forEach(val => this.setState({
-                        like: val.data(),
-                        loading: false
+                        like: val.data()
                     }));
+                    this.setState({loading: false});
+            })
+            db
+            .collection('commentsForPicture')
+            .where('postId', '==', id.id)
+            .onSnapshot(snapshot => {
+                snapshot
+                    .docChanges()
+                    .forEach(changes => {
+                        if (changes.type === 'added') {
+                            const comment = {
+                                postId: changes.doc.data().postId,
+                                text: changes.doc.data().text,
+                                user: changes.doc.data().user,
+                                date: changes.doc.data().date.toDate()
+                            }
+                            this.setState(prevState => ({
+                                comments: [
+                                    ...prevState.comments,
+                                    comment
+                                ]
+                            }))
+                            this.state.comments.sort((a, b) =>  b.date.getTime() - a.date.getTime())
+                        }
+                        this.setState({loading: false});
+                    })
             })
     }
 
     render() {
-
+        console.log(this.state);
         return (
             <div>
                 <Navbar></Navbar>
@@ -166,10 +210,21 @@ class ImageDetails extends React.Component {
                                         onChange={this.handleChange}
                                         margin="none"
                                         className="text-field-width"/>
-                                    <IconButton>
+                                    <IconButton onClick={this.addComment}>
                                         <PublishIcon color="primary" fontSize="large"></PublishIcon>
                                     </IconButton>
                                 </Grid>
+                                <Typography variant="h4">
+                                            Comments
+                                </Typography>
+                                <List>
+                                    {this
+                                        .state
+                                        .comments
+                                        .map((val, ind, arr) => {
+                                            return <Comment key={ind} comment={val}></Comment>
+                                        })}
+                                </List>
 
                             </div>
                         </Grid>
