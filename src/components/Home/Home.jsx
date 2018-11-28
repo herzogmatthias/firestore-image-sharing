@@ -144,11 +144,7 @@ class Home extends React.Component {
         const imgRef = firebase
             .storage()
             .refFromURL(post.imgURL);
-        postToDelete
-            .get()
-            .then(querySnapshot => {
-                querySnapshot.forEach((doc) => doc.ref.delete());
-            });
+        postToDelete.delete();
         likesToDelete
             .get()
             .then(querySnapshot => {
