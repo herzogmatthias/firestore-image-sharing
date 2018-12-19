@@ -52,9 +52,27 @@ export async function deleteLikesForPic(imgUrl) {
         .where('imgURL', '==', imgUrl);
     return likeRef;
 }
+export async function deleteCommentsForPic(postId) {
+    const commentRef = await db.collection('commentsForPicture').where('postId', '==', postId);
+    return commentRef;
+}
 export async function addCommentsForPicture(comment) {
     console.log(comment);
     db
         .collection('commentsForPicture')
         .add(comment);
+}
+export async function addMessagingToken(token) {
+    db.collection('messagingTokens').add(token);
+}
+export async function checkForToken(token) {
+    return await db.collection('messagingTokens').where('uid', "==", token.uid).get();
+}
+export async function getTokenForUid(uid) {
+    const tokenRef = await db.collection('messagingTokens').where('uid', '==', uid).get();
+    return tokenRef;
+}
+export async function updateTokenForUid(token, newId) {
+    const tokenRef = await db.collection('messagingTokens').where('uid', '==', token.uid).get();
+    await tokenRef.docs.forEach(doc => doc.ref.update({id: newId}));
 }

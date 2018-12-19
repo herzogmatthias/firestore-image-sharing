@@ -2,6 +2,8 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/storage';
 import 'firebase/firestore';
+import 'firebase/messaging';
+import { askForPermissionToReceiveNotifications } from './messaging';
 
 const config = {
     apiKey: "AIzaSyA9oGOi_p2_fdIsxGZHCCI71PICZLujdpI",
@@ -14,14 +16,22 @@ const config = {
 
 if (!firebase.apps.length) {
     firebase.initializeApp(config);
-    console.log(firebase.auth);
 }
 
 const auth = firebase.auth();
+const messaging =firebase.messaging();
+messaging.usePublicVapidKey('BCjOUZ6cEDitD1YFIzClutbrVFHA3yoUs-PfTIgRGizuhw0timaF2_XyHPcyIdaJ0BxRYAqRW8i5IV0yp_Pgg08');
+messaging.onMessage(payload => {
+    console.log(payload);
+    const img = 'share.png'
+    const notification = new Notification(payload.notification.title, {body: payload.notification.body, icon: img});
+});
+console.log(messaging);
 const storageRef = firebase
     .storage()
     .ref();
 const storage = firebase.storage;
+askForPermissionToReceiveNotifications();
 const db = firebase.firestore();
 db.settings({
     timestampsInSnapshots: true
@@ -44,4 +54,4 @@ export const uiConfig = {
     signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID]
 };
 
-export {auth, storage, storageRef, db, firebase};
+export {auth, storage, storageRef, db, firebase, messaging};

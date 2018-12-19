@@ -1,7 +1,7 @@
 import React from 'react';
 import './ImageDetails.css'
 import Navbar from '../NavbarComponent/Navbar';
-import {getPostForId, getLikesForImage, addCommentsForPicture} from '../../firebase/firestore.js';
+import {getPostForId, getLikesForImage, addCommentsForPicture, getTokenForUid} from '../../firebase/firestore.js';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
@@ -15,6 +15,7 @@ import {db} from '../../firebase/firebase';
 import Comment from '../CommentComponent/Comment';
 import List from '@material-ui/core/List';
 const queryString = require('query-string');
+const SERVER_KEY = 'AAAAovx93tQ:APA91bFSepepPGmVM95GyPrqHF-U5gAFITYQ7xOgnPQUEhN4yOOBXiXcxiUyq9pJnLmfl5fFlAgBvgi6Ad0eDZGyZXnjSs6nXJQNIba4zoduXnGV0n5i3PcNmd0v2_kHCusAqVNYYROo';
 
 class ImageDetails extends React.Component {
     constructor() {
@@ -41,7 +42,7 @@ class ImageDetails extends React.Component {
         this.setState({myComment: myComment});
         console.log(this.state);
     }
-    addComment = () => {
+    addComment = async () => {
         let myComment = {
             ...this.state.myComment
         }
@@ -49,8 +50,36 @@ class ImageDetails extends React.Component {
         myComment.user = this.state.user;
         console.log(this.state.user)
         console.log(myComment);
+        const tokenRef = await getTokenForUid(this.state.user.uid);
+        let token = {};
+        tokenRef.docs.forEach(doc => token = doc.data())
+        const id = queryString.parse(this.props.location.search);
+        if(token != null) {
+            let notificationBody = {
+                "notification": {
+                    "title": "new Comment",
+                    "body": "You have a new Comment for one of your posts",
+                    "click_action": "https://https://firestore-image-sharing.firebaseapp.com/details?id="+ id.id,
+                },
+                "to": token.id
+            };
+            console.log(notificationBody)
+            fetch('https://fcm.googleapis.com/fcm/send', {method: 'POST', body: JSON.stringify(notificationBody), headers: {
+                "Content-Type": 'application/json',
+                "Authorization": 'key='+ SERVER_KEY
+            }}).then(this.handleErrors).then((value) => {
+                console.log(value);
+            }).catch(error => console.log(error));
+        }
         this.setState({myComment: myComment});
         addCommentsForPicture(myComment);
+    }
+    handleErrors = (response) => {
+        if (!response.ok) {
+            console.log(response);
+            throw Error(response);
+        }
+        return response;
     }
     getTags = () => {
         return this
@@ -67,6 +96,7 @@ class ImageDetails extends React.Component {
             })
     }
     async componentWillMount() {
+        console.log(queryString.parse(this.props.location.search).id.id);
         const id = queryString.parse(this.props.location.search)
         console.log(id);
         

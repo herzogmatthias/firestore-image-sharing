@@ -3,12 +3,13 @@ import './Home.css';
 import ImageDialog from '../ImageDialog/ImageDialog';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {db, firebase} from '../../firebase/firebase';
-import {getPostForId} from '../../firebase/firestore.js';
-import {deleteLikesForPic} from '../../firebase/firestore.js';
+import {getPostForId, deleteCommentsForPic, addMessagingToken, updateTokenForUid} from '../../firebase/firestore.js';
+import {deleteLikesForPic, checkForToken} from '../../firebase/firestore.js';
 import ImageList from '../ImageList/ImageList';
 import Grid from '@material-ui/core/Grid';
 import Select from 'react-select'
 import Navbar from '../NavbarComponent/Navbar';
+import { askForPermissionToReceiveNotifications } from '../../firebase/messaging';
 
 class Home extends React.Component {
     constructor(props) {
@@ -56,7 +57,20 @@ class Home extends React.Component {
         }
         return null;
     }
-    componentWillMount() {
+    async componentWillMount() {
+        let token = {id: "", uid: ""};
+        token.id = await askForPermissionToReceiveNotifications();
+        if(token.id != null) {
+            token.uid = JSON.parse(localStorage.getItem('user')).uid;
+            const tokenRef = await checkForToken(token);
+            if(tokenRef.docs.length === 0) {
+                addMessagingToken(token);
+            } else {
+                let copyToken = {};
+                tokenRef.docs.forEach(doc => copyToken = doc.data());
+                updateTokenForUid(copyToken, token.id);
+            }
+        }
         db
             .collection('posts')
             .onSnapshot((snapshot) => {
@@ -138,6 +152,7 @@ class Home extends React.Component {
     };
     handleDelete = async post => {
         const postToDelete = await getPostForId(post.id);
+        const commentsToDelete = await deleteCommentsForPic(post.id);
         const likesToDelete = await deleteLikesForPic(post.imgURL);
         console.log(postToDelete);
 
@@ -145,6 +160,9 @@ class Home extends React.Component {
             .storage()
             .refFromURL(post.imgURL);
         postToDelete.delete();
+        commentsToDelete.get().then(querySnapshot => {
+            querySnapshot.forEach((doc) => doc.ref.delete());
+        })
         likesToDelete
             .get()
             .then(querySnapshot => {
