@@ -49,8 +49,8 @@ class ImageDetails extends React.Component {
         myComment.date = new Date();
         myComment.user = this.state.user;
         console.log(this.state.user)
-        console.log(myComment);
-        const tokenRef = await getTokenForUid(this.state.user.uid);
+        console.log(this.state.post.user.uid);
+        const tokenRef = await getTokenForUid(this.state.post.user.uid);
         let token = {};
         tokenRef.docs.forEach(doc => token = doc.data())
         const id = queryString.parse(this.props.location.search);
@@ -247,7 +247,7 @@ class ImageDetails extends React.Component {
                                 <Typography variant="h4">
                                             Comments
                                 </Typography>
-                                <List>
+                                <List style={{height:'300px', overflow:'auto'}}>
                                     {this
                                         .state
                                         .comments
