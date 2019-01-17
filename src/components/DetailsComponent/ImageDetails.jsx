@@ -11,6 +11,7 @@ import Divider from '@material-ui/core/Divider';
 import TextField from '@material-ui/core/TextField';
 import PublishIcon from '@material-ui/icons/Publish';
 import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 import {db} from '../../firebase/firebase';
 import Comment from '../CommentComponent/Comment';
 import List from '@material-ui/core/List';
@@ -238,12 +239,10 @@ class ImageDetails extends React.Component {
                                         label="Write Your Comment"
                                         value={this.state.commentText}
                                         onChange={this.handleChange}
-                                        margin="none"
+                                        margin="normal"
                                         className="text-field-width"/>
-                                    <IconButton onClick={this.addComment}>
-                                        <PublishIcon color="primary" fontSize="large"></PublishIcon>
-                                    </IconButton>
                                 </Grid>
+                                <Button onClick={this.addComment} style={{float: 'right'}} variant="contained" color="primary">Comment</Button>
                                 <Typography variant="h4">
                                             Comments
                                 </Typography>
