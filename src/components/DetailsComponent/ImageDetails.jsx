@@ -55,7 +55,7 @@ class ImageDetails extends React.Component {
         let token = {};
         tokenRef.docs.forEach(doc => token = doc.data())
         const id = queryString.parse(this.props.location.search);
-        if(token != null) {
+        if(token != null && this.state.user.uid !== this.state.post.user.uid) {
             let notificationBody = {
                 "notification": {
                     "title": "new Comment",
