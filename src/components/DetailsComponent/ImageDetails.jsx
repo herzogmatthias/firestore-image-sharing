@@ -60,7 +60,7 @@ class ImageDetails extends React.Component {
                 "notification": {
                     "title": "new Comment",
                     "body": "You have a new Comment for one of your posts",
-                    "click_action": "https://https://firestore-image-sharing.firebaseapp.com/details?id="+ id.id,
+                    "click_action": "https://firestore-image-sharing.firebaseapp.com/details?id="+ id.id,
                 },
                 "to": token.id
             };
