@@ -21,3 +21,6 @@
 .text-field-width {
   width: 100%;
 }
+.alignment{
+  vertical-align: top;
+}

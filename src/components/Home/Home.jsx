@@ -215,7 +215,7 @@ class Home extends React.Component {
 
                             )
 
-                    }))}
+                    return(<div key={ind}></div>)}))}
                 <ImageDialog open={this.state.open} onClose={this.handleClose}></ImageDialog>
             </div>
         )

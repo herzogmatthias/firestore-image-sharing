@@ -5,12 +5,10 @@ import {getPostForId, getLikesForImage, addCommentsForPicture, getTokenForUid} f
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
-import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
+import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Divider from '@material-ui/core/Divider';
 import TextField from '@material-ui/core/TextField';
-import PublishIcon from '@material-ui/icons/Publish';
-import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import {db} from '../../firebase/firebase';
 import Comment from '../CommentComponent/Comment';
@@ -193,7 +191,7 @@ class ImageDetails extends React.Component {
                                     <Avatar alt="" src={this.state.post.user.photoURL}></Avatar>
                                 </Grid>
                                 <Grid container justify="center">
-                                    <div className="image-content">
+                                    <div className="image-content" style={{backgroundImage: 'url('+this.state.post.imgURL+')'}}>
                                         <div className="flex-space"></div>
                                         <img src={this.state.post.imgURL} alt={this.state.post.title} className="media"></img>
                                         <div className="flex-space"></div>
@@ -205,7 +203,7 @@ class ImageDetails extends React.Component {
                                         <Typography variant="h4">
                                             <b>{this.state.like.likeCount}
                                             </b>
-                                            <ThumbUpAltIcon fontSize="large" color="primary"></ThumbUpAltIcon>
+                                            <FavoriteBorder className="alignment" fontSize="large" color="primary"></FavoriteBorder>
                                         </Typography>
 
                                     </div>

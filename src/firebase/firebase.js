@@ -24,7 +24,7 @@ messaging.usePublicVapidKey('BCjOUZ6cEDitD1YFIzClutbrVFHA3yoUs-PfTIgRGizuhw0tima
 messaging.onMessage(payload => {
     console.log(payload);
     const img = 'share.png'
-    const notification = new Notification(payload.notification.title, {body: payload.notification.body, icon: img});
+    new Notification(payload.notification.title, {body: payload.notification.body, icon: img});
 });
 console.log(messaging);
 const storageRef = firebase

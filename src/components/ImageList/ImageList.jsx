@@ -1,7 +1,6 @@
 import React from 'react';
 import './ImageList.css'
 import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
@@ -10,7 +9,7 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ChatBoubleRoundedIcon from '@material-ui/icons/ChatBubbleRounded';
-import PlusOneIcon from '@material-ui/icons/PlusOne';
+import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 import {updateLikesForPic} from '../../firebase/firestore.js';
 import {db} from '../../firebase/firebase';
 import {withRouter} from 'react-router-dom'
@@ -120,7 +119,6 @@ class ImageList extends React.Component {
       <div>
 
         <Card className="card">
-          <CardActionArea>
             <CardContent>
               <Grid container justify="space-between">
                 <Avatar alt="" src={this.props.post.user.photoURL}></Avatar>
@@ -139,7 +137,7 @@ class ImageList extends React.Component {
               </Grid>
 
             </CardContent>
-            <div className="image-content">
+            <div className="image-content" style={{backgroundImage: 'url('+this.props.post.imgURL+')'}}>
               <div className="flex-space"></div>
               <img src={this.props.post.imgURL} alt="" className="media"></img>
               <div className="flex-space"></div>
@@ -164,22 +162,18 @@ class ImageList extends React.Component {
               </span>
 
             </CardContent>
-          </CardActionArea>
           <CardActions>
             <Grid container justify="space-between">
               <div>
+              <span style={{verticalAlign: 'middle'}}><b style={{fontSize: '20px'}}>{this.state.like.likeCount}
+                  </b></span>
                 <IconButton onClick={this.handleUpdate}>
-                  <PlusOneIcon color="primary"></PlusOneIcon>
+                  <FavoriteBorder fontSize="large" color="primary"></FavoriteBorder>
                 </IconButton>
-                <Typography component="p">
-                  <b>{this.state.like.likeCount}
-                  </b>
-                  have already liked the picture
-                </Typography>
               </div>
               <div>
                 <IconButton onClick={this.navigateToDetails}>
-                  <ChatBoubleRoundedIcon color="primary"></ChatBoubleRoundedIcon>
+                  <ChatBoubleRoundedIcon fontSize="large" color="primary"></ChatBoubleRoundedIcon>
                 </IconButton>
               </div>
             </Grid>

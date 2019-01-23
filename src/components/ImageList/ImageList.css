@@ -11,7 +11,11 @@
     display: flex;
     width: 100% !important;
     background-color: grey;
+    box-shadow: 0 0 40px 40px white inset;
+    
 }
 .flex-space{
     flex: 1 0 auto !important;
+    background: transparent;
+    filter: blur(1.5rem);
 }
