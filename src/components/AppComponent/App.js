@@ -29,14 +29,12 @@ class App extends Component {
     auth
       .auth
       .onAuthStateChanged((user) => {
-        console.log(user);
         if (user) {
           this.setState({authenticated: user.uid, loading: false})
           localStorage.setItem("user", JSON.stringify(user));
         } else {
           this.setState({authenticated: "", loading: false})
         }
-        console.log(this.state)
       })
   }
 
@@ -80,7 +78,6 @@ function AuthenticatedRoute({
   authenticated,
   ...rest
 }) {
-  console.log(authenticated)
   return (
     <Route
       {...rest}

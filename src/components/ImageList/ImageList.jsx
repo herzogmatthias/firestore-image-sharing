@@ -131,7 +131,7 @@ class ImageList extends React.Component {
             <div className="image-content">
             <img src={this.props.post.imgURL} alt="" className=" backgroundImg media"></img>
               <div className="flex-space"></div>
-              <img src={this.props.post.imgURL} alt="" className="media"></img>
+              <img src={this.props.post.imgURL} alt="" className="media frontImg"></img>
               <div className="flex-space"></div>
             </div>
 

@@ -18,7 +18,6 @@ export async function updateLikesForPic(like, user) {
         .where("imgURL", "==", like.imgURL)
         .get();
     likeRef.forEach(async doc => {
-        console.log(doc);
         const updateRef = await doc
             .ref
             .update({
@@ -27,22 +26,18 @@ export async function updateLikesForPic(like, user) {
                     .arrayUnion(user),
                 "likeCount": like.likeCount + 1
             })
-        console.log(updateRef);
     });
 }
 export async function getLikesForImage(post) {
     const likeRef = await db
         .collection('likesForPic')
         .where('imgURL', '==', post.imgURL);
-    console.log();
     return likeRef;
 }
 export async function getPostForId(id) {
-    console.log(id);
     const imgRef = await db
         .collection('posts')
         .doc(id);
-    console.log(imgRef);
     return imgRef;
 }
 export async function deleteLikesForPic(imgUrl) {
@@ -56,7 +51,6 @@ export async function deleteCommentsForPic(postId) {
     return commentRef;
 }
 export async function addCommentsForPicture(comment) {
-    console.log(comment);
     db
         .collection('commentsForPicture')
         .add(comment);

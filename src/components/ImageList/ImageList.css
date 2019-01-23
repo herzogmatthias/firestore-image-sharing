@@ -1,22 +1,30 @@
 .card{
     margin-bottom: 3vh;
     margin-top: 3vh;
-    width: 50vw;
+    width: 51vw;
 }
 
 .image-content{
     height: 50vh;
 }
+.frontImg{
+    margin-right: auto;
+    margin-left: auto;
+    left: 0;
+    right: 0;
+}
 .media {
     position: absolute;
     height: 50vh;
-    top: 50%;
-    left: 50%;
     z-index: 1;
-    transform: translate(-50%, -50%);
 }
 .backgroundImg {
+    margin-right: auto;
+    margin-left: auto;
+    left: 0;
+    right: 0;
     filter: blur(23px);
+    width: 50vw;
 }
 .flex-space{
     flex: 1 0 auto !important;

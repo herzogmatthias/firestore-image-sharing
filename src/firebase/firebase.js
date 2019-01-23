@@ -23,11 +23,9 @@ const firestore = firebase.firestore;
 const messaging =firebase.messaging();
 messaging.usePublicVapidKey('BCjOUZ6cEDitD1YFIzClutbrVFHA3yoUs-PfTIgRGizuhw0timaF2_XyHPcyIdaJ0BxRYAqRW8i5IV0yp_Pgg08');
 messaging.onMessage(payload => {
-    console.log(payload);
     const img = 'share.png'
     new Notification(payload.notification.title, {body: payload.notification.body, icon: img});
 });
-console.log(messaging);
 const storageRef = firebase
     .storage()
     .ref();

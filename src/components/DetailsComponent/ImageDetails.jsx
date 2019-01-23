@@ -182,11 +182,12 @@ class ImageDetails extends React.Component {
                                     <Avatar alt="" src={this.state.post.user.photoURL}></Avatar>
                                 </Grid>
                                 <Grid container justify="center">
-                                    <div className="image-content" style={{backgroundImage: 'url('+this.state.post.imgURL+')'}}>
-                                        <div className="flex-space"></div>
-                                        <img src={this.state.post.imgURL} alt={this.state.post.title} className="media"></img>
-                                        <div className="flex-space"></div>
-                                    </div>
+                                <div className="image-content">
+            <img src={this.state.post.imgURL} alt="" className=" backgroundImg media"></img>
+              <div className="flex-space"></div>
+              <img src={this.state.post.imgURL} alt="" className="media frontImg"></img>
+              <div className="flex-space"></div>
+            </div>
 
                                 </Grid>
                                 <Grid container justify="space-between">
