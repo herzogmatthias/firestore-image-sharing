@@ -18,7 +18,6 @@ class Navbar extends React.Component {
         };
     }
     singOut = (e) => {
-        console.log(this.props)
         auth
             .auth
             .signOut()
@@ -49,10 +48,6 @@ class Navbar extends React.Component {
                 </Toolbar>
             </AppBar>
         )
-    }
-
-    componentDidMount() {
-        this.setState({someKey: 'otherValue'});
     }
 }
 

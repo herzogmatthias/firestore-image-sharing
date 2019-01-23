@@ -39,7 +39,6 @@ class ImageDetails extends React.Component {
         };
         myComment.text = e.target.value;
         this.setState({myComment: myComment});
-        console.log(this.state);
     }
     addComment = async () => {
         let myComment = {
@@ -47,8 +46,6 @@ class ImageDetails extends React.Component {
         }
         myComment.date = new Date();
         myComment.user = this.state.user;
-        console.log(this.state.user)
-        console.log(this.state.post.user.uid);
         const tokenRef = await getTokenForUid(this.state.post.user.uid);
         let token = {};
         tokenRef.docs.forEach(doc => token = doc.data())
@@ -62,12 +59,10 @@ class ImageDetails extends React.Component {
                 },
                 "to": token.id
             };
-            console.log(notificationBody)
             fetch('https://fcm.googleapis.com/fcm/send', {method: 'POST', body: JSON.stringify(notificationBody), headers: {
                 "Content-Type": 'application/json',
                 "Authorization": 'key='+ SERVER_KEY
             }}).then(this.handleErrors).then((value) => {
-                console.log(value);
             }).catch(error => console.log(error));
         }
         this.setState({myComment: myComment});
@@ -75,7 +70,6 @@ class ImageDetails extends React.Component {
     }
     handleErrors = (response) => {
         if (!response.ok) {
-            console.log(response);
             throw Error(response);
         }
         return response;
@@ -95,9 +89,7 @@ class ImageDetails extends React.Component {
             })
     }
     async componentWillMount() {
-        console.log(queryString.parse(this.props.location.search).id.id);
         const id = queryString.parse(this.props.location.search)
-        console.log(id);
         
         let myComment = {
             ...this.state.myComment
@@ -167,7 +159,6 @@ class ImageDetails extends React.Component {
     }
 
     render() {
-        console.log(this.state);
         return (
             <div>
                 <Navbar></Navbar>

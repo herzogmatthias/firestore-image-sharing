@@ -28,15 +28,11 @@ class ImageList extends React.Component {
     };
   }
   handleUpdate = () => {
-    console.log("I tried")
-    console.log(this.state.hasLiked);
     if (!this.state.hasLiked) {
-      console.log(this.state.like);
       updateLikesForPic(this.state.like, this.state.user);
     }
   }
   hasAlreadyLiked = (data) => {
-    console.log(data);
     data
       .users
       .forEach(value => {
@@ -55,12 +51,10 @@ class ImageList extends React.Component {
       });
   }
   async componentWillMount() {
-    console.log(this.props)
     db
       .collection('likesForPic')
       .where('imgURL', '==', this.props.post.imgURL)
       .onSnapshot(snapshot => {
-        console.log("hello bois");
         snapshot
           .docChanges()
           .forEach(change => {
@@ -73,8 +67,6 @@ class ImageList extends React.Component {
               })
             }
             if (change.type === "modified") {
-              console.log("hello bois");
-              console.log(change.doc.data());
               this.setState({
                 like: change
                   .doc
@@ -83,7 +75,6 @@ class ImageList extends React.Component {
             }
           })
       }, error => console.log(error));
-    console.log(this.state.like)
   }
   getTags = () => {
     return this
@@ -137,7 +128,8 @@ class ImageList extends React.Component {
               </Grid>
 
             </CardContent>
-            <div className="image-content" style={{backgroundImage: 'url('+this.props.post.imgURL+')'}}>
+            <div className="image-content">
+            <img src={this.props.post.imgURL} alt="" className=" backgroundImg media"></img>
               <div className="flex-space"></div>
               <img src={this.props.post.imgURL} alt="" className="media"></img>
               <div className="flex-space"></div>

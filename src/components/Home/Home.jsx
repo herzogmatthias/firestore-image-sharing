@@ -125,13 +125,10 @@ class Home extends React.Component {
                         if (change.type === 'removed') {
                             var arr = [...this.state.posts];
                             let postToDelete = arr.findIndex((val) => val.id === change.doc.id);
-                            console.log(postToDelete);
                             arr.splice(postToDelete, 1);
-                            console.log(arr);
                             this.setState({posts: arr});
                         }
 
-                        console.log(this.state.posts);
                     })
                 this.setState({isLoading: false});
             })
@@ -154,7 +151,6 @@ class Home extends React.Component {
         const postToDelete = await getPostForId(post.id);
         const commentsToDelete = await deleteCommentsForPic(post.id);
         const likesToDelete = await deleteLikesForPic(post.imgURL);
-        console.log(postToDelete);
 
         const imgRef = firebase
             .storage()
@@ -168,12 +164,10 @@ class Home extends React.Component {
             .then(querySnapshot => {
                 querySnapshot.forEach((doc) => doc.ref.delete());
             });
-        console.log(imgRef);
         imgRef.delete();
 
     }
     handleSearch = (e) => {
-        console.log(e);
         this.setState({
             selectedTag: {
                 label: e.label
@@ -202,7 +196,6 @@ class Home extends React.Component {
                         </div>
                     )
                     : (this.state.posts.map((val, ind, arr) => {
-                        console.log(val.tags);
                         if (val.tags.includes(this.state.selectedTag.label) || this.state.selectedTag.label === "" || this.state.selectedTag.label === 'select All') 
                             return (
                                 <Grid key={ind} container justify="center">

@@ -3,19 +3,21 @@
     margin-top: 3vh;
     width: 50vw;
 }
-.media {
-    height: 50vh;
-}
 
 .image-content{
-    display: flex;
-    width: 100% !important;
-    background-color: grey;
-    box-shadow: 0 0 40px 40px white inset;
-    
+    height: 50vh;
+}
+.media {
+    position: absolute;
+    height: 50vh;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+}
+.backgroundImg {
+    filter: blur(23px);
 }
 .flex-space{
     flex: 1 0 auto !important;
-    background: transparent;
-    filter: blur(1.5rem);
 }

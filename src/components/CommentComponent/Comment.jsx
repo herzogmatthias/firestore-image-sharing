@@ -10,7 +10,6 @@ class Comment extends React.Component {
     constructor() {
         super();
         this.state = {
-            someKey: 'someValue'
         };
     }
 
@@ -36,12 +35,6 @@ class Comment extends React.Component {
         )
     }
 
-    componentDidMount() {
-        console.log(this.props);
-    }
-    componentWillMount() {
-        console.log(this.props)
-    }
 }
 
 export default Comment;

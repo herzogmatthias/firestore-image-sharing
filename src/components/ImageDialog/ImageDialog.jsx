@@ -36,7 +36,6 @@ class ImageDialog extends React.Component {
             .onClose();
     };
     handleChange = (e) => {
-        console.log(e.target.files)
         this.setState({src: e.target.files[0]});
     }
     handleMultiLine = (e) => {
@@ -47,7 +46,6 @@ class ImageDialog extends React.Component {
             .state
             .desc
             .split('#');
-        console.log(descArray);
         descArray.splice(0, 1);
         let tags = [];
         for (const tag of descArray) {
@@ -72,7 +70,6 @@ class ImageDialog extends React.Component {
                 .getDownloadURL()
                 .then((downloadURL) => {
                     const tags = this.filterTags();
-                    console.log('File available at', downloadURL);
                     const post = {
                         title: this.state.title,
                         user: this.state.user,
@@ -87,8 +84,6 @@ class ImageDialog extends React.Component {
                         likeCount: 0,
                     }
                     const likeRef = db.addLikesForPic(like);
-                    console.log(likeRef);
-                    console.log(postRef);
                 });
         })
     }
