@@ -9,15 +9,6 @@
 .flex-space {
   flex: 1 0 auto !important;
 }
-.media {
-  height: 50vh;
-}
-
-.image-content {
-  display: flex;
-  width: 100% !important;
-  background-color: grey;
-}
 .text-field-width {
   width: 100%;
 }

@@ -19,6 +19,7 @@ if (!firebase.apps.length) {
 }
 
 const auth = firebase.auth();
+const firestore = firebase.firestore;
 const messaging =firebase.messaging();
 messaging.usePublicVapidKey('BCjOUZ6cEDitD1YFIzClutbrVFHA3yoUs-PfTIgRGizuhw0timaF2_XyHPcyIdaJ0BxRYAqRW8i5IV0yp_Pgg08');
 messaging.onMessage(payload => {
@@ -54,4 +55,4 @@ export const uiConfig = {
     signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID]
 };
 
-export {auth, storage, storageRef, db, firebase, messaging};
+export {auth, storage, storageRef, db, firebase, messaging, firestore};

@@ -1,5 +1,4 @@
-import {db} from './firebase';
-import {firestore} from 'firebase';
+import {db, firestore} from './firebase';
 
 export async function addPost(post) {
     const postRef = db
