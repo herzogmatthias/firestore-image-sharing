@@ -85,6 +85,7 @@ class ImageDialog extends React.Component {
                     }
                     const likeRef = db.addLikesForPic(like);
                 });
+                this.handleClose();
         })
     }
 
