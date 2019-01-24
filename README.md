@@ -1,4 +1,4 @@
-# Firestore-Image-Sharing
+# Firestore-Image-Sharing(Not for Mobile)
 This is a Serverless App for sharing images between people.
 
 ## Built with
@@ -14,6 +14,7 @@ This is a Serverless App for sharing images between people.
 - include tags with Images e.g. #Hello
 - Filter Images by Tags
 - Write Comments under Images
+- Get Notified when somebody writes a comment under your post
 
 ## Website
 https://firestore-image-sharing.firebaseapp.com
