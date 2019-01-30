@@ -56,6 +56,7 @@ class ImageDetails extends React.Component {
                     "title": "new Comment",
                     "body": "You have a new Comment for one of your posts",
                     "click_action": "https://firestore-image-sharing.firebaseapp.com/details?id="+ id.id,
+                    "icon": "https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/image-512.png"
                 },
                 "to": token.id
             };

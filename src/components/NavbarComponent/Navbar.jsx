@@ -3,19 +3,28 @@ import Button from '@material-ui/core/Button';
 import {auth} from '../../firebase/index.js'
 import {withRouter} from 'react-router';
 import Typography from '@material-ui/core/Typography';
-import MenuIcon from '@material-ui/icons/Menu';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
 import Avatar from '@material-ui/core/Avatar';
+import  IconButton  from '@material-ui/core/IconButton';
+import HomeIcon from '@material-ui/icons/Home';
 
 class Navbar extends React.Component {
     constructor() {
         super();
         this.state = {
             someKey: 'someValue',
-            user: JSON.parse(localStorage.getItem('user'))
+            user: JSON.parse(localStorage.getItem('user')),
+
         };
+    }
+    homeButton = () => {
+        this
+      .props
+      .history
+      .push({
+        pathname: '/home'
+      });
     }
     singOut = (e) => {
         auth
@@ -34,9 +43,9 @@ class Navbar extends React.Component {
         return (
             <AppBar position="static">
                 <Toolbar>
-                    <IconButton className="menuButton" color="inherit" aria-label="Menu">
-                        <MenuIcon/>
-                    </IconButton>
+                <IconButton color="inherit" aria-label="Menu" onClick={this.homeButton}>
+                    <HomeIcon></HomeIcon>
+                </IconButton>
                     <Typography className="grow" variant="h6" color="inherit">
                         Image-Sharing
                     </Typography>
